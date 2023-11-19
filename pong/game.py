@@ -1,22 +1,16 @@
 import json
-# import pong.constants
 from pygame.math import Vector2
-# import pong.entities
 
-# from pong.entities import Paddle, World, GameEntity, Ball
-# from pong.constants import *
-# # from pong.common import *
-# import pong.common
 import pong
 import pong.entities
 import pong.common
 
 
 class Player(pong.entities.Paddle):
-    def __init__(self, player_num):
+    def __init__(self, playerNum):
         super().__init__(None)
         self.score = 0
-        self.number = player_num
+        self.number = playerNum
         self.reset_location()
 
     def reset_location(self):
@@ -35,11 +29,9 @@ class Player(pong.entities.Paddle):
 
 
 class Pong(pong.entities.World):
-    """Represents the playing field"""
 
     def __init__(self):
         super().__init__()
-        # pong.entities.GameEntity.world = self
 
         self.player1 = Player(pong.constants.PLAYER1)
         self.player2 = Player(pong.constants.PLAYER2)
@@ -57,8 +49,7 @@ class Pong(pong.entities.World):
 
         self.ball.heading = Vector2(1, 1).normalize()
 
-    def ball_side(self):
-        """Return the player the ball is nearest to"""
+    def ball_out(self):
         ball_center = Vector2(self.ball.get_rect().center)
         if ball_center.x < self.WIDTH / 2:
             return self.player1
@@ -66,34 +57,33 @@ class Pong(pong.entities.World):
             return self.player2
 
     def handle_scores(self):
-        """Responsible for incrementing scores, and resetting the ball's position when it dies"""
         if not self.ball.alive():
-            # increment scores first
-            if self.ball_side() is self.player1:
+            if self.ball_out() is self.player1:
                 self.player2.score += 1
             else:
                 self.player1.score += 1
             self.ball.reset()
 
-    def update(self, seconds_passed):
-        super().update(seconds_passed)
+    def update(self, passSecond):
+        super().update(passSecond)
         self.handle_scores()
 
     def locations_json(self):
-        return json.dumps(self, default=pong.common.to_json, separators=(',', ':'))
+        return json.dumps(self, default=pong.common.toJson, separators=(',', ':'))
 
-    def update_with_json(self, json_pong):
-        """This is mainly for the client side; Update this pong instance with a json string
-        containing Pong entity locations"""
-        p = json.loads(json_pong, object_hook=pong.common.from_json)
+    def update_with_json(self, jsonPong):
+
+        p = json.loads(jsonPong, object_hook=pong.common.fromJson)
         assert isinstance(p, Pong)
         self.player1.location = p.player1.location
         self.player1.score = p.player1.score
-        self.player1.WIDTH, self.player1.HEIGHT = p.player1.WIDTH, p.player1.HEIGHT
+        self.player1.WIDTH = p.player1.WIDTH
+        self.player1.HEIGHT = p.player1.HEIGHT
 
         self.player2.location = p.player2.location
         self.player2.score = p.player2.score
-        self.player2.WIDTH, self.player2.HEIGHT = p.player2.WIDTH, p.player2.HEIGHT
+        self.player2.WIDTH = p.player2.WIDTH
+        self.player2.HEIGHT = p.player2.HEIGHT
 
         self.ball.location = p.ball.location
 

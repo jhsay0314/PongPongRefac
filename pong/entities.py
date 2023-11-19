@@ -1,11 +1,8 @@
 import json
 import pygame
-# from pong.constants import *
 import pong
 import pong.constants
 from pygame.math import Vector2
-# import pong.common as common
-
 
 class GameEntity(pygame.sprite.Sprite):
     world = None
@@ -16,10 +13,10 @@ class GameEntity(pygame.sprite.Sprite):
         if self.world is None:
             super().__init__()
         else:
-            super().__init__(GameEntity.world)    # Place this in the world automatically
+            super().__init__(GameEntity.world)    
         self.location = Vector2(location) if location is not None else Vector2()
 
-    def update(self, seconds_passed):
+    def update(self):
         pass
 
     def get_rect(self):
@@ -27,7 +24,7 @@ class GameEntity(pygame.sprite.Sprite):
         return pygame.Rect(int(x), int(y), self.WIDTH, self.HEIGHT)
 
     def get_collision(self):
-        """Gets the GameEntity object that this has collided with"""
+        
         if self.world is None:
             return None
 
@@ -42,8 +39,7 @@ class GameEntity(pygame.sprite.Sprite):
         attributes = dict()
         attributes['class_name'] = self.__class__.__name__
         attributes['location'] = (*self.location,)
-        # attributes.update(self.__dict__)
-        # return json.dumps(self, default=common.convert_to_builtin_type, separators=(',',':'))
+
         return json.dumps(attributes, separators=(',',':'))
 
 
@@ -53,22 +49,19 @@ class Ball(GameEntity):
     SIZE = (WIDTH, HEIGHT)
     COLOR = pygame.color.Color('white')
     SPEED = 200
-    # WORLD = None
 
-    # container = None
 
     def __init__(self, location=None):
         super().__init__(location=location)
-        # GameEntity.__init__(self)
-        # pygame.sprite.Sprite.__init__(self, self.world)
+       
         self.image = pygame.Surface(self.SIZE)
         self.image.fill(self.COLOR)
         self.rect = self.image.get_rect()
         self.speed = self.SPEED
         self.heading = Vector2()
 
-    def update(self, seconds_passed):
-        self.location += seconds_passed * self.speed * self.heading
+    def update(self, passSecond):
+        self.location += passSecond * self.speed * self.heading
 
         if self.location.y < 0:
             self.location.y = 0
@@ -79,15 +72,13 @@ class Ball(GameEntity):
             self.heading = self.heading.reflect(Vector2(0, 1))
 
         collision = self.get_collision()
+
         if collision is not None:
             if self.location.x < collision.location.x:
-                # Ball is left of paddle when they collided...
                 self.location.x = collision.location.x - self.WIDTH
             else:
-                # Ball is right of paddle when they collided...
                 self.location.x = collision.location.x + collision.WIDTH
-            self.heading.reflect_ip(Vector2(1, 0))  # Flip horizontal movement
-        # ball_rect = self.get_rect()
+            self.heading.reflect_ip(Vector2(1, 0))  
 
     def alive(self):
         if self.world is None:
@@ -99,8 +90,7 @@ class Ball(GameEntity):
     def reset(self):
         if self.world is None:
             return
-        # Put the ball in the middle of the field.
-        # self.location = Vector2((self.world.WIDTH - self.WIDTH) / 2, (self.world.HEIGHT - self.HEIGHT) / 2)
+        
         self.location = self.default_location()
         self.speed = self.SPEED
 
@@ -124,11 +114,11 @@ class Paddle(GameEntity):
         self.speed = self.SPEED
         self.heading = Vector2()
 
-    def update(self, seconds_passed):
-        self.move(seconds_passed)
+    def update(self, passSecond):
+        self.move(passSecond)
 
-    def move(self, seconds_passed):
-        self.location += self.speed * self.heading * seconds_passed
+    def move(self, passSecond):
+        self.location += self.speed * self.heading * passSecond
 
         if self.world is None:
             return

@@ -43,7 +43,7 @@ class ServerHandler(socket.socket, threading.Thread):
         decoded = data.decode('utf-8')
         try:
             player_number = int(decoded)
-            print('player_number', player_number)
+            print('플레이어 번호는', player_number)
         except ValueError as err:
             raise ValueError(err + ' Should have received an integer!')
         if return_dict is not None and isinstance(return_dict, dict):
@@ -72,7 +72,7 @@ class ServerHandler(socket.socket, threading.Thread):
     def send_client_command(self):
         # self.sendto(pongserver.server.PongServer.COMMAND_CLIENT_CONNECT.encode('utf-8'), self.server_address)
         if self.client_command is None:
-            print('Unable to send client command: None!')
+            print('클라이언트 명령을 보낼 수 없습니다.')
             return
         self.sendto(self.client_command.json().encode('utf-8'), self.server_address)
         return

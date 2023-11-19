@@ -30,21 +30,21 @@ class PongServer(threading.Thread, socket.socket):
         self.pong_world = pong.game.Pong()
 
     def run(self):
-        print('Hosting at:', self.getsockname())
+        print('호스팅은:', self.getsockname())
 
-        print('Starting server.')
+        print('서버를 시작중입니다.')
 
         for i in range(2):
             player_number = i + 1
 
-            print('Waiting for client #{}'.format(player_number))
+            print('클라이언트 #{}를 기다리는 중 입니다.'.format(player_number))
             c = self.wait_client()
             self.clients.append(c)
 
-            print('Sending player number {} to {}'.format(player_number, c))
+            print('플레이어 번호를 {}에서 {}로 보내는 중 입니다.'.format(player_number, c))
             self.send_player_number(c, player_number)
 
-        print('Starting game.')
+        print('게임을 시작 중 입니다.')
         clock = pygame.time.Clock()
         seconds_passed = 0
 
@@ -56,7 +56,7 @@ class PongServer(threading.Thread, socket.socket):
     def wait_client(self, return_queue=None):
         """Step 1: Wait for a client to connect."""
         data, address_info = self.recvfrom(self.BUFFER_SIZE)
-        print('data:', data, 'address_info:', address_info)
+        print('data:', data, '주소 정보:', address_info)
 
         if data:
             decoded = data.decode('utf-8')

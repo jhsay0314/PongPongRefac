@@ -11,10 +11,10 @@ import pong.entities
 
 """Pong GUI client"""
 
-# LOCAL_ADDRESS = ('localhost', 10400)
 
 
-# SERVER_ADDRESS = ('localhost', pongserver.server.PongServer.DEFAULT_PORT)
+
+
 address = input('서버주소를 입력해주세요 Server address (host:port) = ')
 host, port = address.split(':')
 port = int(port)
@@ -29,7 +29,7 @@ def main():
     pong_world = pong.game.Pong()
     client_command = pong.common.ClientCommand()
 
-    # Randomly generate the address for this client
+    
     local_address = ('localhost', random.randint(10000, 20000))
 
     svh = client.client.ServerHandler(local_address,
@@ -63,15 +63,12 @@ def main():
                 elif event.key == K_SPACE:
                     client_command.action = False
 
-        # Update pong world
-        # actually done in the server handler thread.
 
-        # Draw graphics
+     
         display.fill(pygame.Color('black'))
         for entity in pong_world.sprites():
             display.blit(entity.image, entity.location)
-            # if isinstance(entity, pong.game.Player) and entity.number == svh.player_number:
-            #     print('player location: ', entity.location)
+           
 
         pygame.display.update()
         clock.tick(60)

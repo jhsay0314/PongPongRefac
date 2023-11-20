@@ -17,7 +17,7 @@ class ServerHandler(socket.socket, threading.Thread):
         self.bind(bind_address)
         self.server_address = server_address
         self.player_number = -1
-        # self.port = port
+        
         self.pong_world = pong_world
         self.client_command = client_command
 
@@ -49,7 +49,7 @@ class ServerHandler(socket.socket, threading.Thread):
         if return_dict is not None and isinstance(return_dict, dict):
             return_dict['player_number'] = player_number
 
-        # OVERWRITE self.server_address to the one received, since that will be address of the client handler
+        
         self.server_address = address
 
         return player_number
@@ -61,7 +61,7 @@ class ServerHandler(socket.socket, threading.Thread):
             return -1
         decoded_json = data.decode('utf-8')
         try:
-            # pong_update = json.loads(decoded_json, object_hook=pong.common.from_json)
+            
             pass
         except json.JSONDecodeError as err:
             raise json.JSONDecodeError(err + ' Not a JSON string!')
@@ -70,7 +70,7 @@ class ServerHandler(socket.socket, threading.Thread):
         return decoded_json
 
     def send_client_command(self):
-        # self.sendto(pongserver.server.PongServer.COMMAND_CLIENT_CONNECT.encode('utf-8'), self.server_address)
+        
         if self.client_command is None:
             print('클라이언트 명령을 보낼 수 없습니다.')
             return

@@ -4,7 +4,6 @@ import json
 import queue
 import threading
 import socket
-# import pong
 import pong.game
 
 
@@ -13,14 +12,14 @@ class PongServer(threading.Thread, socket.socket):
     DEFAULT_PORT = 10939
     COMMAND_CLIENT_CONNECT = 'pong_connect'
     TIMEOUT = 2.0
-    COMMAND_RATE = 60   # updates per second
+    COMMAND_RATE = 60   
 
     def __init__(self, port=None):
         threading.Thread.__init__(self, name='Server thread')
         socket.socket.__init__(self, type=socket.SOCK_DGRAM)
 
         self.port = self.DEFAULT_PORT if port is None else port
-        # self.settimeout(self.TIMEOUT)
+       
         self.bind(('', self.port))
         self.clients = []
         self.player_addresses = dict()
@@ -64,7 +63,7 @@ class PongServer(threading.Thread, socket.socket):
                 raise ValueError('Expecting "{}", but got "{}"'.format(self.COMMAND_CLIENT_CONNECT, decoded))
             if return_queue is not None:
                 return_queue['client_address'] = address_info
-            # print('Client address found:', address_info)
+            
             return address_info
 
     def send_player_number(self, client_address, player_number):
@@ -72,7 +71,7 @@ class PongServer(threading.Thread, socket.socket):
         ch = ClientHandler(self.port + self._current_player_to_assign, client_address, player_number, self)
         self.client_handlers.append(ch)
         self._current_player_to_assign += 1
-        ch.start()    # Start happens later in another function...?
+        ch.start()    
 
         self.player_addresses[player_number] = client_address
 
